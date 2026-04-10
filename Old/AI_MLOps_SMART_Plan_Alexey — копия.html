@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alexey's 6-Month AI/MLOps SMART Learning Plan</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #22263a;
+    --accent: #6c63ff;
+    --accent2: #00d2ff;
+    --green: #00e676;
+    --orange: #ffa726;
+    --red: #ef5350;
+    --text: #e8eaf6;
+    --muted: #8892b0;
+    --border: #2d3155;
+    --m1: #3a86ff;
+    --m2: #8338ec;
+    --m3: #fb5607;
+    --m4: #ffbe0b;
+    --m5: #3a9e5f;
+    --m6: #e63946;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, #0f1117 0%, #1a1d27 40%, #0f1117 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 36px 40px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(108,99,255,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header-top { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+  .header-title h1 { font-size: 28px; font-weight: 700; color: #fff; letter-spacing: -0.5px; }
+  .header-title h1 span { color: var(--accent2); }
+  .header-title .subtitle { color: var(--muted); font-size: 14px; margin-top: 4px; }
+  .badges { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+  .badge {
+    padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;
+    border: 1px solid; letter-spacing: 0.3px;
+  }
+  .badge-purple { background: rgba(108,99,255,0.15); border-color: rgba(108,99,255,0.4); color: #a29bfe; }
+  .badge-blue { background: rgba(0,210,255,0.1); border-color: rgba(0,210,255,0.3); color: var(--accent2); }
+  .badge-green { background: rgba(0,230,118,0.1); border-color: rgba(0,230,118,0.3); color: var(--green); }
+  .badge-orange { background: rgba(255,167,38,0.1); border-color: rgba(255,167,38,0.3); color: var(--orange); }
+
+  /* SMART OVERVIEW */
+  .smart-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin: 24px 40px 0;
+  }
+  .smart-section h2 { font-size: 16px; color: var(--muted); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 16px; }
+  .smart-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+  .smart-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .smart-card .letter {
+    font-size: 24px; font-weight: 800; color: var(--accent);
+    line-height: 1; margin-bottom: 6px;
+  }
+  .smart-card .word { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .smart-card .desc { font-size: 13px; color: var(--text); }
+
+  /* PROGRESS BAR */
+  .progress-section {
+    margin: 24px 40px 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+  }
+  .progress-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .progress-header h2 { font-size: 16px; color: var(--muted); text-transform: uppercase; letter-spacing: 1.5px; }
+  .progress-count { font-size: 14px; color: var(--text); }
+  .progress-count span { color: var(--green); font-weight: 700; }
+  .progress-bar-bg {
+    background: var(--surface2);
+    border-radius: 8px; height: 10px; overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 8px;
+    transition: width 0.5s ease;
+  }
+  .phase-bars { margin-top: 16px; display: flex; gap: 4px; }
+  .phase-bar-item { flex: 1; text-align: center; }
+  .phase-bar-item .mini-bar-bg { height: 6px; background: var(--surface2); border-radius: 4px; overflow: hidden; }
+  .phase-bar-item .mini-bar-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
+  .phase-bar-item .phase-label { font-size: 10px; color: var(--muted); margin-top: 4px; }
+
+  /* MAIN CONTENT */
+  .main { padding: 24px 40px 60px; }
+
+  /* TIMELINE */
+  .timeline-header {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 20px; margin-top: 8px;
+  }
+  .timeline-header h2 { font-size: 20px; font-weight: 700; }
+
+  /* PHASE CARD */
+  .phase {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    transition: box-shadow 0.2s;
+  }
+  .phase:hover { box-shadow: 0 4px 24px rgba(0,0,0,0.3); }
+  .phase-header {
+    display: flex; align-items: center; gap: 16px;
+    padding: 20px 24px;
+    cursor: pointer;
+    user-select: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+  }
+  .phase.open .phase-header { border-color: var(--border); }
+  .phase-dot {
+    width: 44px; height: 44px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 800; flex-shrink: 0;
+    color: #fff;
+  }
+  .phase-meta { flex: 1; }
+  .phase-meta h3 { font-size: 16px; font-weight: 700; }
+  .phase-meta .phase-dates { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .phase-status {
+    font-size: 12px; font-weight: 600; padding: 4px 12px;
+    border-radius: 20px; border: 1px solid;
+    white-space: nowrap;
+  }
+  .status-upcoming { background: rgba(136,146,176,0.1); border-color: rgba(136,146,176,0.3); color: var(--muted); }
+  .status-active { background: rgba(0,210,255,0.1); border-color: rgba(0,210,255,0.3); color: var(--accent2); }
+  .status-done { background: rgba(0,230,118,0.1); border-color: rgba(0,230,118,0.3); color: var(--green); }
+  .phase-toggle { color: var(--muted); font-size: 16px; transition: transform 0.3s; }
+  .phase.open .phase-toggle { transform: rotate(180deg); }
+
+  .phase-body { display: none; padding: 20px 24px 24px; }
+  .phase.open .phase-body { display: block; }
+
+  /* SMART GOAL BLOCK */
+  .smart-goal {
+    background: var(--surface2);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-bottom: 18px;
+    border-left: 3px solid var(--accent);
+    font-size: 14px;
+    color: var(--text);
+  }
+  .smart-goal strong { color: var(--accent2); }
+
+  /* TWO COL */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px; }
+  @media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } }
+
+  .col-block h4 { font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 10px; }
+
+  /* TASKS */
+  .task-list { list-style: none; }
+  .task-list li {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 7px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    font-size: 14px;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  .task-list li:last-child { border-bottom: none; }
+  .task-list li.done { color: var(--muted); text-decoration: line-through; }
+  .task-checkbox {
+    width: 18px; height: 18px; flex-shrink: 0;
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+    margin-top: 2px;
+  }
+  .task-list li.done .task-checkbox {
+    background: var(--green); border-color: var(--green);
+  }
+  .task-checkbox::after { content: '✓'; color: #000; font-size: 11px; font-weight: 700; opacity: 0; }
+  .task-list li.done .task-checkbox::after { opacity: 1; }
+
+  /* RESOURCES */
+  .resource-list { list-style: none; }
+  .resource-list li { margin-bottom: 8px; }
+  .resource-list a {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 12px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 13px;
+    transition: all 0.2s;
+  }
+  .resource-list a:hover { border-color: var(--accent); color: var(--accent2); }
+  .resource-list a .res-icon { font-size: 16px; flex-shrink: 0; }
+  .resource-list a .res-info .res-name { font-weight: 600; }
+  .resource-list a .res-info .res-tag { font-size: 11px; color: var(--muted); }
+
+  /* MILESTONE */
+  .milestone-block {
+    background: linear-gradient(135deg, rgba(108,99,255,0.1), rgba(0,210,255,0.1));
+    border: 1px solid rgba(108,99,255,0.3);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-top: 18px;
+    font-size: 14px;
+  }
+  .milestone-block .milestone-label {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
+    color: var(--accent); font-weight: 700; margin-bottom: 6px;
+  }
+
+  /* STARTUP TIP */
+  .startup-tip {
+    background: rgba(255,167,38,0.08);
+    border: 1px solid rgba(255,167,38,0.2);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-top: 18px;
+    font-size: 13px;
+    color: var(--orange);
+  }
+  .startup-tip .tip-label { font-weight: 700; margin-bottom: 4px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
+
+  /* RESOURCES SIDEBAR */
+  .resources-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+  .resources-section h2 { font-size: 16px; font-weight: 700; margin-bottom: 18px; }
+  .res-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+  .res-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    text-decoration: none;
+    color: var(--text);
+    transition: all 0.2s;
+    display: block;
+  }
+  .res-card:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .res-card .rc-top { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .res-card .rc-icon { font-size: 22px; }
+  .res-card .rc-name { font-weight: 700; font-size: 14px; }
+  .res-card .rc-desc { font-size: 12px; color: var(--muted); }
+  .res-card .rc-tags { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+  .rc-tag { font-size: 11px; padding: 2px 8px; border-radius: 10px; background: var(--bg); border: 1px solid var(--border); color: var(--muted); }
+
+  /* PHASE COLORS */
+  .c1 { background: var(--m1); }
+  .c2 { background: var(--m2); }
+  .c3 { background: var(--m3); }
+  .c4 { background: var(--m4); }
+  .c5 { background: var(--m5); }
+  .c6 { background: var(--m6); }
+  .b1 { border-left: 4px solid var(--m1); }
+  .b2 { border-left: 4px solid var(--m2); }
+  .b3 { border-left: 4px solid var(--m3); }
+  .b4 { border-left: 4px solid var(--m4); }
+  .b5 { border-left: 4px solid var(--m5); }
+  .b6 { border-left: 4px solid var(--m6); }
+  .fill1 { background: var(--m1); }
+  .fill2 { background: var(--m2); }
+  .fill3 { background: var(--m3); }
+  .fill4 { background: var(--m4); }
+  .fill5 { background: var(--m5); }
+  .fill6 { background: var(--m6); }
+
+  /* FOOTER */
+  .footer {
+    text-align: center;
+    padding: 20px 40px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  /* MOBILE */
+  @media (max-width: 600px) {
+    .header { padding: 24px 20px; }
+    .smart-section, .progress-section, .main { padding-left: 20px; padding-right: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-top">
+    <div class="header-title">
+      <h1>Alexey's <span>AI/MLOps</span> SMART Plan</h1>
+      <div class="subtitle">6-Month Roadmap · March 2026 → September 2026 · From IT Manager to AI Engineer</div>
+    </div>
+  </div>
+  <div class="badges">
+    <span class="badge badge-purple">🎯 Goal: AI Programmer</span>
+    <span class="badge badge-blue">⏱ 6 Months</span>
+    <span class="badge badge-orange">🚀 Startup Context</span>
+    <span class="badge badge-green">🐣 Beginner Start</span>
+    <span class="badge badge-purple">⚙️ DevOps → MLOps Path</span>
+  </div>
+</div>
+
+<!-- SMART OVERVIEW -->
+<div class="smart-section">
+  <h2>🎯 SMART Goal Framework</h2>
+  <div class="smart-grid">
+    <div class="smart-card">
+      <div class="letter">S</div>
+      <div class="word">Specific</div>
+      <div class="desc">Become a job-ready AI/MLOps engineer capable of building and deploying ML models for the startup</div>
+    </div>
+    <div class="smart-card">
+      <div class="letter">M</div>
+      <div class="word">Measurable</div>
+      <div class="desc">Complete 6 phase milestones, build 3 portfolio projects, deploy 1 live ML service on cloud</div>
+    </div>
+    <div class="smart-card">
+      <div class="letter">A</div>
+      <div class="word">Achievable</div>
+      <div class="desc">10–12 hrs/week study; leverage IT management background + DevOps path into MLOps</div>
+    </div>
+    <div class="smart-card">
+      <div class="letter">R</div>
+      <div class="word">Relevant</div>
+      <div class="desc">Directly serves the startup's AI product needs alongside the frontend dev & manager co-founders</div>
+    </div>
+    <div class="smart-card">
+      <div class="letter">T</div>
+      <div class="word">Time-bound</div>
+      <div class="desc">6 months: March 15 → September 15, 2026. Monthly milestones with weekly check-ins</div>
+    </div>
+  </div>
+</div>
+
+<!-- PROGRESS -->
+<div class="progress-section">
+  <div class="progress-header">
+    <h2>📊 Overall Progress</h2>
+    <div class="progress-count">Tasks completed: <span id="doneCount">0</span> / <span id="totalCount">0</span></div>
+  </div>
+  <div class="progress-bar-bg">
+    <div class="progress-bar-fill" id="mainBar" style="width: 0%"></div>
+  </div>
+  <div class="phase-bars" id="phaseBars">
+    <div class="phase-bar-item">
+      <div class="mini-bar-bg"><div class="mini-bar-fill fill1" id="pb1" style="width:0%"></div></div>
+      <div class="phase-label">Phase 1</div>
+    </div>
+    <div class="phase-bar-item">
+      <div class="mini-bar-bg"><div class="mini-bar-fill fill2" id="pb2" style="width:0%"></div></div>
+      <div class="phase-label">Phase 2</div>
+    </div>
+    <div class="phase-bar-item">
+      <div class="mini-bar-bg"><div class="mini-bar-fill fill3" id="pb3" style="width:0%"></div></div>
+      <div class="phase-label">Phase 3</div>
+    </div>
+    <div class="phase-bar-item">
+      <div class="mini-bar-bg"><div class="mini-bar-fill fill4" id="pb4" style="width:0%"></div></div>
+      <div class="phase-label">Phase 4</div>
+    </div>
+    <div class="phase-bar-item">
+      <div class="mini-bar-bg"><div class="mini-bar-fill fill5" id="pb5" style="width:0%"></div></div>
+      <div class="phase-label">Phase 5</div>
+    </div>
+    <div class="phase-bar-item">
+      <div class="mini-bar-bg"><div class="mini-bar-fill fill6" id="pb6" style="width:0%"></div></div>
+      <div class="phase-label">Phase 6</div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="timeline-header">
+    <h2>📅 6-Month Roadmap</h2>
+    <span style="font-size:13px; color: var(--muted);">Click a phase to expand · Check tasks as you complete them</span>
+  </div>
+
+  <!-- PHASE 1 -->
+  <div class="phase open b1" data-phase="1">
+    <div class="phase-header" onclick="togglePhase(this)">
+      <div class="phase-dot c1">1</div>
+      <div class="phase-meta">
+        <h3>🐍 Python & CS Foundations</h3>
+        <div class="phase-dates">March 15 – April 15, 2026 · Month 1</div>
+      </div>
+      <span class="phase-status status-active">🔵 Active Now</span>
+      <span class="phase-toggle">▼</span>
+    </div>
+    <div class="phase-body">
+      <div class="smart-goal">
+        <strong>SMART Goal:</strong> By April 15, write a working Python script that uses a simple ML model (e.g., linear regression on a dataset), push it to GitHub, and understand Git version control basics.
+      </div>
+      <div class="two-col">
+        <div class="col-block">
+          <h4>✅ Weekly Tasks</h4>
+          <ul class="task-list" data-phase="1">
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Week 1: Set up Python environment (VSCode, pip, venv)</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Week 1: Complete Python basics — variables, loops, functions</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Week 2: Learn Git & GitHub — commit, push, branches</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Week 2: Linux terminal basics (cd, ls, chmod, ssh)</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Week 3: Python for data — NumPy & Pandas basics</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Week 3: Start CS50 AI with Python (first 2 lectures)</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Week 4: Build mini project — Python script that reads CSV, cleans data, outputs stats</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Week 4: Push project to GitHub with a README</li>
+          </ul>
+        </div>
+        <div class="col-block">
+          <h4>📚 Resources</h4>
+          <ul class="resource-list">
+            <li><a href="https://pll.harvard.edu/course/cs50s-introduction-artificial-intelligence-python" target="_blank">
+              <span class="res-icon">🎓</span>
+              <div class="res-info"><div class="res-name">CS50 AI with Python</div><div class="res-tag">Harvard · Free · Beginner</div></div>
+            </a></li>
+            <li><a href="https://www.coursera.org/learn/ai-python-for-beginners" target="_blank">
+              <span class="res-icon">🤖</span>
+              <div class="res-info"><div class="res-name">AI Python for Beginners</div><div class="res-tag">DeepLearning.AI · Coursera · Free audit</div></div>
+            </a></li>
+            <li><a href="https://www.coursera.org/learn/python-for-applied-data-science-ai" target="_blank">
+              <span class="res-icon">📊</span>
+              <div class="res-info"><div class="res-name">Python for Data Science & AI</div><div class="res-tag">IBM · Coursera · Free audit</div></div>
+            </a></li>
+            <li><a href="https://github.com/milanm/DevOps-Roadmap" target="_blank">
+              <span class="res-icon">🗺️</span>
+              <div class="res-info"><div class="res-name">DevOps Roadmap 2026</div><div class="res-tag">GitHub · Free · Reference</div></div>
+            </a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="milestone-block">
+        <div class="milestone-label">🏁 Month 1 Milestone</div>
+        Python environment running, first GitHub repo live, CS50 AI first half completed. You can write, run, and share Python scripts.
+      </div>
+      <div class="startup-tip">
+        <div class="tip-label">💡 Startup Angle</div>
+        Set up a shared GitHub organization for your startup now. This is free infrastructure your frontend co-founder also needs — start collaborating on version control together from day 1.
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 2 -->
+  <div class="phase b2" data-phase="2">
+    <div class="phase-header" onclick="togglePhase(this)">
+      <div class="phase-dot c2">2</div>
+      <div class="phase-meta">
+        <h3>🧠 Machine Learning Fundamentals</h3>
+        <div class="phase-dates">April 15 – May 15, 2026 · Month 2</div>
+      </div>
+      <span class="phase-status status-upcoming">⚪ Upcoming</span>
+      <span class="phase-toggle">▼</span>
+    </div>
+    <div class="phase-body">
+      <div class="smart-goal">
+        <strong>SMART Goal:</strong> By May 15, complete Andrew Ng's ML Specialization Courses 1–2 and train + evaluate 3 different ML models on public datasets using scikit-learn.
+      </div>
+      <div class="two-col">
+        <div class="col-block">
+          <h4>✅ Weekly Tasks</h4>
+          <ul class="task-list" data-phase="2">
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Week 1: Andrew Ng ML Specialization — Course 1 (Supervised Learning)</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Week 1: Understand linear regression, logistic regression, cost functions</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Week 2: Course 1 labs — build regression models in Jupyter Notebook</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Week 2: Learn train/test split, cross-validation, overfitting concepts</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Week 3: Andrew Ng ML — Course 2 (Advanced Algorithms)</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Week 3: Decision trees, random forests, neural network basics</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Week 4: Build portfolio project — train model on a real Kaggle dataset</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Week 4: Document and publish project on GitHub with results</li>
+          </ul>
+        </div>
+        <div class="col-block">
+          <h4>📚 Resources</h4>
+          <ul class="resource-list">
+            <li><a href="https://www.coursera.org/specializations/machine-learning-introduction" target="_blank">
+              <span class="res-icon">🌟</span>
+              <div class="res-info"><div class="res-name">Andrew Ng ML Specialization</div><div class="res-tag">Coursera · Free audit · ⭐ Top Pick</div></div>
+            </a></li>
+            <li><a href="https://www.kaggle.com/learn" target="_blank">
+              <span class="res-icon">🏆</span>
+              <div class="res-info"><div class="res-name">Kaggle Learn + Competitions</div><div class="res-tag">Free · Project-based · Portfolio builder</div></div>
+            </a></li>
+            <li><a href="https://scikit-learn.org/stable/tutorial/" target="_blank">
+              <span class="res-icon">⚙️</span>
+              <div class="res-info"><div class="res-name">scikit-learn Official Docs</div><div class="res-tag">Free · Best ML library for beginners</div></div>
+            </a></li>
+            <li><a href="https://www.deeplearning.ai/" target="_blank">
+              <span class="res-icon">🧠</span>
+              <div class="res-info"><div class="res-name">DeepLearning.AI</div><div class="res-tag">Free/Paid · Andrew Ng platform</div></div>
+            </a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="milestone-block">
+        <div class="milestone-label">🏁 Month 2 Milestone</div>
+        ML Specialization Courses 1–2 complete. 1 Kaggle project published to GitHub. Can explain supervised vs. unsupervised learning and train models independently.
+      </div>
+      <div class="startup-tip">
+        <div class="tip-label">💡 Startup Angle</div>
+        Identify 1 real problem your startup wants to solve with AI (e.g. recommendations, classification, prediction). This becomes your hands-on ML project — far more meaningful than generic datasets.
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 3 -->
+  <div class="phase b3" data-phase="3">
+    <div class="phase-header" onclick="togglePhase(this)">
+      <div class="phase-dot c3">3</div>
+      <div class="phase-meta">
+        <h3>🐳 DevOps & Containerization</h3>
+        <div class="phase-dates">May 15 – June 15, 2026 · Month 3</div>
+      </div>
+      <span class="phase-status status-upcoming">⚪ Upcoming</span>
+      <span class="phase-toggle">▼</span>
+    </div>
+    <div class="phase-body">
+      <div class="smart-goal">
+        <strong>SMART Goal:</strong> By June 15, containerize a trained ML model into a Docker image, expose it via a FastAPI endpoint, and deploy it to a cloud VM (AWS/GCP free tier).
+      </div>
+      <div class="two-col">
+        <div class="col-block">
+          <h4>✅ Weekly Tasks</h4>
+          <ul class="task-list" data-phase="3">
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Week 1: Docker fundamentals — images, containers, Dockerfile, volumes</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Week 1: Containerize a simple Python app</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Week 2: FastAPI basics — build a REST API that serves ML predictions</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Week 2: Docker-compose for multi-container setups</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Week 3: CI/CD basics — GitHub Actions for automated tests</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Week 3: Set up free-tier cloud account (GCP or AWS)</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Week 4: Deploy containerized ML API to cloud VM</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Week 4: Add basic health check and logging</li>
+          </ul>
+        </div>
+        <div class="col-block">
+          <h4>📚 Resources</h4>
+          <ul class="resource-list">
+            <li><a href="https://docs.docker.com/get-started/" target="_blank">
+              <span class="res-icon">🐳</span>
+              <div class="res-info"><div class="res-name">Docker Official Get Started</div><div class="res-tag">Free · Official docs · Hands-on</div></div>
+            </a></li>
+            <li><a href="https://fastapi.tiangolo.com/tutorial/" target="_blank">
+              <span class="res-icon">⚡</span>
+              <div class="res-info"><div class="res-name">FastAPI Official Tutorial</div><div class="res-tag">Free · Modern Python API framework</div></div>
+            </a></li>
+            <li><a href="https://devopscube.com/devops-to-mlops/" target="_blank">
+              <span class="res-icon">🔁</span>
+              <div class="res-info"><div class="res-name">DevOps to MLOps Guide</div><div class="res-tag">DevOpsCube · Free · Practical</div></div>
+            </a></li>
+            <li><a href="https://docs.github.com/en/actions" target="_blank">
+              <span class="res-icon">⚙️</span>
+              <div class="res-info"><div class="res-name">GitHub Actions Docs</div><div class="res-tag">Free · CI/CD fundamentals</div></div>
+            </a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="milestone-block">
+        <div class="milestone-label">🏁 Month 3 Milestone</div>
+        Live ML API endpoint accessible on the internet. Dockerfile committed to GitHub. GitHub Actions CI pipeline runs on every push. ← This is a deployable product feature!
+      </div>
+      <div class="startup-tip">
+        <div class="tip-label">💡 Startup Angle</div>
+        Your IT management background is gold here — you understand systems, deployment, and reliability. Lead the startup's cloud infrastructure setup in Month 3. This is where you add immediate value while learning.
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 4 -->
+  <div class="phase b4" data-phase="4">
+    <div class="phase-header" onclick="togglePhase(this)">
+      <div class="phase-dot c4">4</div>
+      <div class="phase-meta">
+        <h3>⚙️ MLOps Core Tools</h3>
+        <div class="phase-dates">June 15 – July 15, 2026 · Month 4</div>
+      </div>
+      <span class="phase-status status-upcoming">⚪ Upcoming</span>
+      <span class="phase-toggle">▼</span>
+    </div>
+    <div class="phase-body">
+      <div class="smart-goal">
+        <strong>SMART Goal:</strong> By July 15, set up a complete MLflow experiment tracking system, implement DVC for data versioning, and build an automated retraining pipeline triggered by new data.
+      </div>
+      <div class="two-col">
+        <div class="col-block">
+          <h4>✅ Weekly Tasks</h4>
+          <ul class="task-list" data-phase="4">
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Week 1: MLflow setup — experiment tracking, model registry</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Week 1: Log parameters, metrics, and artifacts in experiments</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Week 2: DVC — data version control, remote storage (S3/GCS)</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Week 2: Feature engineering pipeline with reproducible stages</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Week 3: Model evaluation frameworks — A/B testing concepts, metrics</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Week 3: Automated training pipeline with GitHub Actions + DVC</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Week 4: Model monitoring basics — detect data drift</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Week 4: Set up Prometheus/Grafana monitoring for ML API</li>
+          </ul>
+        </div>
+        <div class="col-block">
+          <h4>📚 Resources</h4>
+          <ul class="resource-list">
+            <li><a href="https://mlflow.org/docs/latest/tutorials-and-examples/" target="_blank">
+              <span class="res-icon">📈</span>
+              <div class="res-info"><div class="res-name">MLflow Tutorials</div><div class="res-tag">Free · Experiment tracking · Industry standard</div></div>
+            </a></li>
+            <li><a href="https://dvc.org/doc/start" target="_blank">
+              <span class="res-icon">📦</span>
+              <div class="res-info"><div class="res-name">DVC Getting Started</div><div class="res-tag">Free · Data version control</div></div>
+            </a></li>
+            <li><a href="https://roadmap.sh/mlops" target="_blank">
+              <span class="res-icon">🗺️</span>
+              <div class="res-info"><div class="res-name">roadmap.sh/mlops</div><div class="res-tag">Free · Community-driven · Visual guide</div></div>
+            </a></li>
+            <li><a href="https://www.coursera.org/specializations/machine-learning-engineering-for-production-mlops" target="_blank">
+              <span class="res-icon">🏭</span>
+              <div class="res-info"><div class="res-name">MLOps Specialization (DeepLearning.AI)</div><div class="res-tag">Coursera · Andrew Ng · Production ML</div></div>
+            </a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="milestone-block">
+        <div class="milestone-label">🏁 Month 4 Milestone</div>
+        MLflow dashboard showing experiment history. DVC pipeline reproducible from scratch. Automated retraining triggered by data changes. Model drift alerts configured.
+      </div>
+      <div class="startup-tip">
+        <div class="tip-label">💡 Startup Angle</div>
+        EPAM-standard MLOps (from Roman's expertise) emphasizes reproducibility and auditability. Set up your MLflow tracking server as a shared team tool — your manager co-founder can use the dashboard to understand model performance without writing code.
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 5 -->
+  <div class="phase b5" data-phase="5">
+    <div class="phase-header" onclick="togglePhase(this)">
+      <div class="phase-dot c5">5</div>
+      <div class="phase-meta">
+        <h3>☁️ Cloud & Orchestration</h3>
+        <div class="phase-dates">July 15 – August 15, 2026 · Month 5</div>
+      </div>
+      <span class="phase-status status-upcoming">⚪ Upcoming</span>
+      <span class="phase-toggle">▼</span>
+    </div>
+    <div class="phase-body">
+      <div class="smart-goal">
+        <strong>SMART Goal:</strong> By August 15, deploy a full ML pipeline on a cloud platform (GCP Vertex AI or AWS SageMaker) with Kubernetes orchestration and automated model promotion workflow.
+      </div>
+      <div class="two-col">
+        <div class="col-block">
+          <h4>✅ Weekly Tasks</h4>
+          <ul class="task-list" data-phase="5">
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Week 1: Kubernetes fundamentals — pods, services, deployments</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Week 1: Deploy ML API to Kubernetes cluster (GKE or EKS)</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Week 2: Airflow or Kubeflow Pipelines for ML workflow orchestration</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Week 2: Cloud-managed ML: GCP Vertex AI or AWS SageMaker basics</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Week 3: Infrastructure as Code — Terraform for ML infrastructure</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Week 3: Model serving patterns — canary, blue-green deployment</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Week 4: End-to-end pipeline: data → training → evaluation → deploy</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Week 4: Cost optimization and resource management on cloud</li>
+          </ul>
+        </div>
+        <div class="col-block">
+          <h4>📚 Resources</h4>
+          <ul class="resource-list">
+            <li><a href="https://www.techworld-with-nana.com/mlops-roadmap" target="_blank">
+              <span class="res-icon">🎓</span>
+              <div class="res-info"><div class="res-name">TechWorld with Nana — MLOps</div><div class="res-tag">Paid · Highly practical · DevOps-first approach</div></div>
+            </a></li>
+            <li><a href="https://cloud.google.com/vertex-ai/docs/start/introduction-unified-platform" target="_blank">
+              <span class="res-icon">☁️</span>
+              <div class="res-info"><div class="res-name">Google Cloud Vertex AI</div><div class="res-tag">Free tier · Managed ML platform</div></div>
+            </a></li>
+            <li><a href="https://www.coursera.org/resources/mlops-learning-roadmap" target="_blank">
+              <span class="res-icon">📋</span>
+              <div class="res-info"><div class="res-name">Coursera MLOps Learning Roadmap</div><div class="res-tag">Free · Structured curriculum</div></div>
+            </a></li>
+            <li><a href="https://projectpro.io/learning-paths/mlops-roadmap" target="_blank">
+              <span class="res-icon">🏗️</span>
+              <div class="res-info"><div class="res-name">ProjectPro MLOps Roadmap</div><div class="res-tag">Project-based · Hands-on labs</div></div>
+            </a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="milestone-block">
+        <div class="milestone-label">🏁 Month 5 Milestone</div>
+        ML model running in Kubernetes on cloud. Automated retraining + deployment pipeline working end-to-end. Infrastructure defined as code (Terraform). Cloud costs tracked and optimized.
+      </div>
+      <div class="startup-tip">
+        <div class="tip-label">💡 Startup Angle</div>
+        Your IT management skills make you uniquely suited to lead cloud cost management — a huge startup concern. Position yourself as the person who can build AND manage AI infrastructure responsibly.
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 6 -->
+  <div class="phase b6" data-phase="6">
+    <div class="phase-header" onclick="togglePhase(this)">
+      <div class="phase-dot c6">6</div>
+      <div class="phase-meta">
+        <h3>🚀 Portfolio & Real-World Application</h3>
+        <div class="phase-dates">August 15 – September 15, 2026 · Month 6</div>
+      </div>
+      <span class="phase-status status-upcoming">⚪ Upcoming</span>
+      <span class="phase-toggle">▼</span>
+    </div>
+    <div class="phase-body">
+      <div class="smart-goal">
+        <strong>SMART Goal:</strong> By September 15, publish 3 portfolio projects on GitHub, build and deploy 1 AI feature for the startup's product, and be ready for AI/MLOps engineer interviews or client demos.
+      </div>
+      <div class="two-col">
+        <div class="col-block">
+          <h4>✅ Weekly Tasks</h4>
+          <ul class="task-list" data-phase="6">
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Week 1: Polish 3 portfolio projects — clean code, good READMEs, live demos</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Week 1: Write technical blog post on Medium/Substack about your AI journey</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Week 2: Build AI feature for startup product (integrate with frontend dev)</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Week 2: Set up LinkedIn profile highlighting AI/MLOps skills</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Week 3: Generative AI & LLM integration — OpenAI API, LangChain basics</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Week 3: Explore Hugging Face models for potential startup use</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Week 4: Final review — mock technical interview or peer code review</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Week 4: Set 6-month advanced learning goals (post-plan)</li>
+          </ul>
+        </div>
+        <div class="col-block">
+          <h4>📚 Resources</h4>
+          <ul class="resource-list">
+            <li><a href="https://huggingface.co/learn" target="_blank">
+              <span class="res-icon">🤗</span>
+              <div class="res-info"><div class="res-name">Hugging Face Courses</div><div class="res-tag">Free · NLP, LLMs, Transformers</div></div>
+            </a></li>
+            <li><a href="https://platform.openai.com/docs" target="_blank">
+              <span class="res-icon">🔮</span>
+              <div class="res-info"><div class="res-name">OpenAI API Docs</div><div class="res-tag">Free tier · Build AI apps with GPT</div></div>
+            </a></li>
+            <li><a href="https://towardsdatascience.com/a-realistic-roadmap-to-start-an-ai-career-in-2026/" target="_blank">
+              <span class="res-icon">📰</span>
+              <div class="res-info"><div class="res-name">Realistic AI Career Roadmap 2026</div><div class="res-tag">Towards Data Science · Article</div></div>
+            </a></li>
+            <li><a href="https://www.deeplearning.ai/short-courses/" target="_blank">
+              <span class="res-icon">⚡</span>
+              <div class="res-info"><div class="res-name">DeepLearning.AI Short Courses</div><div class="res-tag">Free · LangChain, RAG, GenAI apps</div></div>
+            </a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="milestone-block">
+        <div class="milestone-label">🏁 Month 6 Milestone — GOAL ACHIEVED ✅</div>
+        3 GitHub portfolio projects. 1 live AI feature in startup product. LinkedIn updated. Can demo a full ML pipeline from data to cloud deployment. Ready for AI/MLOps roles.
+      </div>
+      <div class="startup-tip">
+        <div class="tip-label">💡 Startup Angle</div>
+        By Month 6, you're not just "learning AI" — you're the CTO of your startup's AI infrastructure. Your IT management background + 6 months of hands-on AI/MLOps = a rare, valuable combination at early-stage companies.
+      </div>
+    </div>
+  </div>
+
+  <!-- MASTER RESOURCE LIST -->
+  <div class="resources-section">
+    <h2>🔗 Master Resource Library (Credible Sources)</h2>
+    <div class="res-grid">
+      <a class="res-card" href="https://www.deeplearning.ai/" target="_blank">
+        <div class="rc-top"><span class="rc-icon">🧠</span><div class="rc-name">DeepLearning.AI</div></div>
+        <div class="rc-desc">Andrew Ng's platform. The gold standard for structured AI learning from beginner to expert.</div>
+        <div class="rc-tags"><span class="rc-tag">Free/Paid</span><span class="rc-tag">ML</span><span class="rc-tag">Top Pick</span></div>
+      </a>
+      <a class="res-card" href="https://pll.harvard.edu/course/cs50s-introduction-artificial-intelligence-python" target="_blank">
+        <div class="rc-top"><span class="rc-icon">🎓</span><div class="rc-name">Harvard CS50 AI</div></div>
+        <div class="rc-desc">Free university-quality course. Python-based AI from search algorithms to neural networks.</div>
+        <div class="rc-tags"><span class="rc-tag">Free</span><span class="rc-tag">Python</span><span class="rc-tag">Harvard</span></div>
+      </a>
+      <a class="res-card" href="https://roadmap.sh/mlops" target="_blank">
+        <div class="rc-top"><span class="rc-icon">🗺️</span><div class="rc-name">roadmap.sh/mlops</div></div>
+        <div class="rc-desc">Community-maintained visual MLOps roadmap with curated resources for each skill node.</div>
+        <div class="rc-tags"><span class="rc-tag">Free</span><span class="rc-tag">MLOps</span><span class="rc-tag">Visual</span></div>
+      </a>
+      <a class="res-card" href="https://www.kaggle.com/learn" target="_blank">
+        <div class="rc-top"><span class="rc-icon">🏆</span><div class="rc-name">Kaggle Learn</div></div>
+        <div class="rc-desc">Free micro-courses + real dataset competitions. Best place to build a public ML portfolio.</div>
+        <div class="rc-tags"><span class="rc-tag">Free</span><span class="rc-tag">Projects</span><span class="rc-tag">Portfolio</span></div>
+      </a>
+      <a class="res-card" href="https://mlflow.org/docs/latest/" target="_blank">
+        <div class="rc-top"><span class="rc-icon">📈</span><div class="rc-name">MLflow Docs</div></div>
+        <div class="rc-desc">Industry-standard MLOps tool. Experiment tracking, model registry, model serving.</div>
+        <div class="rc-tags"><span class="rc-tag">Free</span><span class="rc-tag">MLOps</span><span class="rc-tag">Open Source</span></div>
+      </a>
+      <a class="res-card" href="https://huggingface.co/learn" target="_blank">
+        <div class="rc-top"><span class="rc-icon">🤗</span><div class="rc-name">Hugging Face</div></div>
+        <div class="rc-desc">Free courses on NLP, transformers, and LLMs. Access to 100,000+ open-source AI models.</div>
+        <div class="rc-tags"><span class="rc-tag">Free</span><span class="rc-tag">LLMs</span><span class="rc-tag">NLP</span></div>
+      </a>
+      <a class="res-card" href="https://github.com/milanm/DevOps-Roadmap" target="_blank">
+        <div class="rc-top"><span class="rc-icon">🛠️</span><div class="rc-name">DevOps Roadmap 2026</div></div>
+        <div class="rc-desc">Step-by-step DevOps learning with curated resources. Feeds directly into MLOps path.</div>
+        <div class="rc-tags"><span class="rc-tag">Free</span><span class="rc-tag">DevOps</span><span class="rc-tag">GitHub</span></div>
+      </a>
+      <a class="res-card" href="https://www.techworld-with-nana.com/mlops-roadmap" target="_blank">
+        <div class="rc-top"><span class="rc-icon">📺</span><div class="rc-name">TechWorld with Nana</div></div>
+        <div class="rc-desc">Practical DevOps/MLOps courses. Very hands-on, especially for containerization & Kubernetes.</div>
+        <div class="rc-tags"><span class="rc-tag">Paid</span><span class="rc-tag">MLOps</span><span class="rc-tag">K8s</span></div>
+      </a>
+    </div>
+  </div>
+
+  <!-- NOTE FOR ROMAN'S PLAN -->
+  <div class="resources-section" style="border-color: rgba(255,167,38,0.3);">
+    <h2 style="color: var(--orange);">📋 Note: Roman's EPAM Recommendations</h2>
+    <p style="font-size:14px; color: var(--muted); line-height: 1.7;">
+      This plan is ready to be <strong style="color: var(--text);">refined with Roman's draft</strong> once you share it. EPAM is known for enterprise-grade engineering standards — expect Roman's recommendations to emphasize:
+      <br><br>
+      <strong style="color: var(--text);">• Code quality & testing</strong> (unit tests, integration tests for ML pipelines) &nbsp;|&nbsp;
+      <strong style="color: var(--text);">• Documentation standards</strong> &nbsp;|&nbsp;
+      <strong style="color: var(--text);">• Security in ML systems</strong> &nbsp;|&nbsp;
+      <strong style="color: var(--text);">• Team collaboration practices</strong>
+      <br><br>
+      Please paste or upload Roman's plan — I'll update this document with his specific resource picks and adjust the timeline accordingly. 🙏
+    </p>
+  </div>
+</div>
+
+<div class="footer">
+  Alexey's AI/MLOps SMART Plan · Created March 15, 2026 · Update this plan with Roman's recommendations when available
+</div>
+
+<script>
+  // Toggle phase expand/collapse
+  function togglePhase(header) {
+    const phase = header.closest('.phase');
+    phase.classList.toggle('open');
+  }
+
+  // Toggle task completion
+  function toggleTask(li) {
+    li.classList.toggle('done');
+    updateProgress();
+    saveTasks();
+  }
+
+  // Update progress bars
+  function updateProgress() {
+    const allTasks = document.querySelectorAll('.task-list li');
+    const doneTasks = document.querySelectorAll('.task-list li.done');
+    const total = allTasks.length;
+    const done = doneTasks.length;
+
+    document.getElementById('totalCount').textContent = total;
+    document.getElementById('doneCount').textContent = done;
+    document.getElementById('mainBar').style.width = total ? (done / total * 100) + '%' : '0%';
+
+    // Per-phase
+    for (let i = 1; i <= 6; i++) {
+      const phaseEl = document.querySelector(`[data-phase="${i}"] .task-list`);
+      if (!phaseEl) continue;
+      const pAll = phaseEl.querySelectorAll('li');
+      const pDone = phaseEl.querySelectorAll('li.done');
+      const pct = pAll.length ? (pDone.length / pAll.length * 100) : 0;
+      const bar = document.getElementById('pb' + i);
+      if (bar) bar.style.width = pct + '%';
+    }
+  }
+
+  // Save to localStorage
+  function saveTasks() {
+    const tasks = [];
+    document.querySelectorAll('.task-list li').forEach((li, i) => {
+      tasks.push(li.classList.contains('done'));
+    });
+    try { localStorage.setItem('alexey_ai_plan', JSON.stringify(tasks)); } catch(e){}
+  }
+
+  // Load from localStorage
+  function loadTasks() {
+    try {
+      const saved = JSON.parse(localStorage.getItem('alexey_ai_plan') || '[]');
+      document.querySelectorAll('.task-list li').forEach((li, i) => {
+        if (saved[i]) li.classList.add('done');
+      });
+    } catch(e){}
+    updateProgress();
+  }
+
+  // Init
+  window.addEventListener('load', () => {
+    loadTasks();
+    updateProgress();
+  });
+</script>
+</body>
+</html>

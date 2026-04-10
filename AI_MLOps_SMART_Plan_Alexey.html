@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alexey's AI System Design SMART Plan</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #22263a;
+    --accent: #6c63ff;
+    --accent2: #00d2ff;
+    --green: #00e676;
+    --orange: #ffa726;
+    --red: #ef5350;
+    --text: #e8eaf6;
+    --muted: #8892b0;
+    --border: #2d3155;
+    --m1: #3a86ff;
+    --m2: #8338ec;
+    --m3: #fb5607;
+    --m4: #ffbe0b;
+    --m5: #3a9e5f;
+    --m6: #e63946;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; line-height: 1.6; }
+
+  .header {
+    background: linear-gradient(135deg, #0f1117 0%, #1a1d27 40%, #0f1117 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 36px 40px 28px;
+    position: relative; overflow: hidden;
+  }
+  .header::before {
+    content: ''; position: absolute; top: -60px; right: -60px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(108,99,255,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header h1 { font-size: 28px; font-weight: 700; color: #fff; letter-spacing: -0.5px; }
+  .header h1 span { color: var(--accent2); }
+  .header .subtitle { color: var(--muted); font-size: 14px; margin-top: 4px; }
+  .badges { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+  .badge { padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; border: 1px solid; letter-spacing: 0.3px; }
+  .badge-purple { background: rgba(108,99,255,.15); border-color: rgba(108,99,255,.4); color: #a29bfe; }
+  .badge-blue   { background: rgba(0,210,255,.1);   border-color: rgba(0,210,255,.3);   color: var(--accent2); }
+  .badge-green  { background: rgba(0,230,118,.1);   border-color: rgba(0,230,118,.3);   color: var(--green); }
+  .badge-orange { background: rgba(255,167,38,.1);  border-color: rgba(255,167,38,.3);  color: var(--orange); }
+  .badge-red    { background: rgba(230,57,70,.1);   border-color: rgba(230,57,70,.3);   color: #ff6b6b; }
+
+  .roman-notice {
+    margin: 24px 40px 0;
+    background: linear-gradient(135deg, rgba(108,99,255,0.12), rgba(0,210,255,0.08));
+    border: 1px solid rgba(108,99,255,0.35);
+    border-radius: 12px;
+    padding: 18px 22px;
+    display: flex; align-items: flex-start; gap: 14px;
+  }
+  .roman-notice .icon { font-size: 28px; flex-shrink: 0; margin-top: 2px; }
+  .roman-notice h3 { font-size: 15px; font-weight: 700; color: #a29bfe; margin-bottom: 4px; }
+  .roman-notice p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+  .roman-notice strong { color: var(--text); }
+
+  .section { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin: 20px 40px 0; }
+  .section h2 { font-size: 14px; color: var(--muted); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 16px; }
+  .smart-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+  .smart-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 14px; }
+  .smart-card .letter { font-size: 24px; font-weight: 800; color: var(--accent); line-height: 1; margin-bottom: 4px; }
+  .smart-card .word { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+  .smart-card .desc { font-size: 12px; color: var(--text); }
+
+  .progress-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+  .progress-count { font-size: 14px; color: var(--text); }
+  .progress-count span { color: var(--green); font-weight: 700; }
+  .progress-bar-bg { background: var(--surface2); border-radius: 8px; height: 10px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 8px; transition: width 0.5s ease; }
+  .phase-bars { margin-top: 14px; display: flex; gap: 4px; }
+  .phase-bar-item { flex: 1; text-align: center; }
+  .phase-bar-item .mini-bar-bg { height: 6px; background: var(--surface2); border-radius: 4px; overflow: hidden; }
+  .phase-bar-item .mini-bar-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
+  .phase-bar-item .phase-label { font-size: 10px; color: var(--muted); margin-top: 4px; }
+
+  .timeline-overview { margin: 20px 40px 0; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; overflow-x: auto; }
+  .timeline-overview h2 { font-size: 14px; color: var(--muted); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 16px; }
+  .tl-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; min-width: 600px; }
+  .tl-cell { border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #fff; border: 1px solid rgba(255,255,255,0.1); }
+  .tl-cell .tl-month { font-size: 10px; opacity: 0.7; margin-bottom: 4px; }
+  .tl-cell .tl-title { font-weight: 700; margin-bottom: 4px; }
+  .tl-cell .tl-tag { font-size: 10px; opacity: 0.8; }
+  .tl-c1 { background: rgba(58,134,255,0.25); border-color: rgba(58,134,255,0.4); }
+  .tl-c2 { background: rgba(131,56,236,0.25); border-color: rgba(131,56,236,0.4); }
+  .tl-c3 { background: rgba(251,86,7,0.25); border-color: rgba(251,86,7,0.4); }
+  .tl-c4 { background: rgba(255,190,11,0.2); border-color: rgba(255,190,11,0.4); }
+  .tl-c5 { background: rgba(58,158,95,0.25); border-color: rgba(58,158,95,0.4); }
+  .tl-c6 { background: rgba(230,57,70,0.2); border-color: rgba(230,57,70,0.4); }
+
+  .main { padding: 20px 40px 60px; }
+  .timeline-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; margin-top: 4px; }
+  .timeline-header h2 { font-size: 20px; font-weight: 700; }
+
+  .phase { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; margin-bottom: 16px; overflow: hidden; transition: box-shadow .2s; }
+  .phase:hover { box-shadow: 0 4px 24px rgba(0,0,0,0.3); }
+  .phase-header { display: flex; align-items: center; gap: 16px; padding: 18px 22px; cursor: pointer; user-select: none; border-bottom: 1px solid transparent; transition: border-color .2s; }
+  .phase.open .phase-header { border-color: var(--border); }
+  .phase-dot { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 800; flex-shrink: 0; color: #fff; }
+  .phase-meta { flex: 1; }
+  .phase-meta h3 { font-size: 15px; font-weight: 700; }
+  .phase-meta .phase-dates { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .phase-status { font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px; border: 1px solid; white-space: nowrap; }
+  .status-upcoming { background: rgba(136,146,176,.1); border-color: rgba(136,146,176,.3); color: var(--muted); }
+  .status-active   { background: rgba(0,210,255,.1);   border-color: rgba(0,210,255,.3);   color: var(--accent2); }
+  .status-done     { background: rgba(0,230,118,.1);   border-color: rgba(0,230,118,.3);   color: var(--green); }
+  .phase-toggle { color: var(--muted); font-size: 14px; transition: transform .3s; }
+  .phase.open .phase-toggle { transform: rotate(180deg); }
+  .phase-body { display: none; padding: 18px 22px 22px; }
+  .phase.open .phase-body { display: block; }
+
+  .roman-module { display: inline-flex; align-items: center; gap: 6px; background: rgba(108,99,255,0.15); border: 1px solid rgba(108,99,255,0.35); border-radius: 6px; padding: 4px 10px; font-size: 11px; color: #a29bfe; font-weight: 600; margin-bottom: 12px; }
+
+  .smart-goal { background: var(--surface2); border-radius: 10px; padding: 12px 16px; margin-bottom: 16px; border-left: 3px solid var(--accent); font-size: 13px; }
+  .smart-goal strong { color: var(--accent2); }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  @media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } }
+  .col-block h4 { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 8px; }
+
+  .task-list { list-style: none; }
+  .task-list li { display: flex; align-items: flex-start; gap: 8px; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,.04); font-size: 13px; cursor: pointer; transition: color .2s; }
+  .task-list li:last-child { border-bottom: none; }
+  .task-list li.done { color: var(--muted); text-decoration: line-through; }
+  .task-checkbox { width: 17px; height: 17px; flex-shrink: 0; border: 2px solid var(--border); border-radius: 4px; display: flex; align-items: center; justify-content: center; transition: all .2s; margin-top: 2px; }
+  .task-list li.done .task-checkbox { background: var(--green); border-color: var(--green); }
+  .task-checkbox::after { content: '✓'; color: #000; font-size: 10px; font-weight: 700; opacity: 0; }
+  .task-list li.done .task-checkbox::after { opacity: 1; }
+  .topic-tag { display: inline-block; font-size: 10px; padding: 1px 6px; border-radius: 4px; background: var(--bg); border: 1px solid var(--border); color: var(--muted); margin-right: 4px; white-space: nowrap; }
+
+  .resource-list { list-style: none; }
+  .resource-list li { margin-bottom: 6px; }
+  .resource-list a { display: flex; align-items: center; gap: 8px; padding: 7px 10px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-size: 12px; transition: all .2s; }
+  .resource-list a:hover { border-color: var(--accent); color: var(--accent2); }
+  .resource-list a .res-icon { font-size: 15px; flex-shrink: 0; }
+  .resource-list a .res-name { font-weight: 600; }
+  .resource-list a .res-tag { font-size: 10px; color: var(--muted); }
+
+  .milestone-block { background: linear-gradient(135deg, rgba(108,99,255,.1), rgba(0,210,255,.1)); border: 1px solid rgba(108,99,255,.3); border-radius: 10px; padding: 12px 16px; margin-top: 16px; font-size: 13px; }
+  .milestone-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); font-weight: 700; margin-bottom: 5px; }
+  .startup-tip { background: rgba(255,167,38,.08); border: 1px solid rgba(255,167,38,.2); border-radius: 10px; padding: 12px 16px; margin-top: 12px; font-size: 12px; color: var(--orange); }
+  .tip-label { font-weight: 700; margin-bottom: 3px; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; }
+
+  .books-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin-top: 8px; }
+  .book-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; }
+  .book-card .book-icon { font-size: 20px; margin-bottom: 6px; }
+  .book-card .book-title { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+  .book-card .book-author { font-size: 11px; color: var(--muted); }
+  .book-card .book-phase { font-size: 10px; color: var(--accent); margin-top: 4px; }
+
+  .res-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; }
+  .res-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 14px; text-decoration: none; color: var(--text); transition: all .2s; display: block; }
+  .res-card:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .res-card .rc-top { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .res-card .rc-icon { font-size: 20px; }
+  .res-card .rc-name { font-weight: 700; font-size: 13px; }
+  .res-card .rc-desc { font-size: 12px; color: var(--muted); }
+  .res-card .rc-tags { display: flex; gap: 5px; margin-top: 8px; flex-wrap: wrap; }
+  .rc-tag { font-size: 10px; padding: 2px 7px; border-radius: 10px; background: var(--bg); border: 1px solid var(--border); color: var(--muted); }
+
+  .c1{background:var(--m1);} .c2{background:var(--m2);} .c3{background:var(--m3);}
+  .c4{background:var(--m4);} .c5{background:var(--m5);} .c6{background:var(--m6);}
+  .b1{border-left:4px solid var(--m1);} .b2{border-left:4px solid var(--m2);}
+  .b3{border-left:4px solid var(--m3);} .b4{border-left:4px solid var(--m4);}
+  .b5{border-left:4px solid var(--m5);} .b6{border-left:4px solid var(--m6);}
+  .fill1{background:var(--m1);} .fill2{background:var(--m2);} .fill3{background:var(--m3);}
+  .fill4{background:var(--m4);} .fill5{background:var(--m5);} .fill6{background:var(--m6);}
+
+  .footer { text-align: center; padding: 20px 40px; border-top: 1px solid var(--border); color: var(--muted); font-size: 12px; }
+  @media (max-width: 600px) { .header, .section, .roman-notice, .timeline-overview, .main { padding-left: 16px; padding-right: 16px; } }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Alexey's <span>AI System Design</span> SMART Plan</h1>
+  <div class="subtitle">6-Month Roadmap · March–September 2026 · Curator: Roman Yustin (EPAM)</div>
+  <div class="badges">
+    <span class="badge badge-purple">🎯 AI Programmer</span>
+    <span class="badge badge-blue">⏱ 6 Months</span>
+    <span class="badge badge-orange">🚀 Startup Context</span>
+    <span class="badge badge-red">🤖 Agentic AI Focus</span>
+    <span class="badge badge-green">📋 Roman's Curriculum</span>
+  </div>
+</div>
+
+<div class="roman-notice">
+  <div class="icon">🧑‍💼</div>
+  <div>
+    <h3>Основа: программа Романа Юстина (EPAM) — AI System Design</h3>
+    <p>
+      Роман рекомендует подход <strong>top-down</strong>: сначала паттерны агентных систем → потом архитектура → потом конкретный стек.
+      Ключевые инструменты: <strong>LangChain / LangGraph, CrewAI, Claude Agent SDK, Anthropic Cookbook</strong>.
+      Книги: <strong>Chip Huyen (DMLS + AI Engineering), Valentina Alto, Alex Xu (System Design)</strong>.
+      Timeline Романа: Модули 1–4 (март–июль 2026) → Software Architecture (август+) → Tech Stack (осень 2026).
+    </p>
+  </div>
+</div>
+
+<div class="section">
+  <h2>🎯 SMART Goal Framework</h2>
+  <div class="smart-grid">
+    <div class="smart-card"><div class="letter">S</div><div class="word">Specific</div><div class="desc">Спроектировать и задеплоить агентную AI-систему для стартапа по программе Романа (4 модуля)</div></div>
+    <div class="smart-card"><div class="letter">M</div><div class="word">Measurable</div><div class="desc">4 модуля Романа + 3 GitHub-проекта + 1 live AI-фича в продукте стартапа к сентябрю</div></div>
+    <div class="smart-card"><div class="letter">A</div><div class="word">Achievable</div><div class="desc">10–12 ч/нед; IT-управленческий бэкграунд + структурная программа Романа = реалистично</div></div>
+    <div class="smart-card"><div class="letter">R</div><div class="word">Relevant</div><div class="desc">Agentic AI + RAG + Multi-Agent — прямое применение в продукте стартапа с frontend-разработчиком</div></div>
+    <div class="smart-card"><div class="letter">T</div><div class="word">Time-bound</div><div class="desc">Mar–Jul: Модули 1–4. Aug: Deploy + Arch. Sep: Portfolio. Осень 2026: Stage 3 (конкретный стек)</div></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="progress-header">
+    <h2>📊 Overall Progress</h2>
+    <div class="progress-count">Completed: <span id="doneCount">0</span> / <span id="totalCount">0</span></div>
+  </div>
+  <div class="progress-bar-bg"><div class="progress-bar-fill" id="mainBar" style="width:0%"></div></div>
+  <div class="phase-bars">
+    <div class="phase-bar-item"><div class="mini-bar-bg"><div class="mini-bar-fill fill1" id="pb1" style="width:0%"></div></div><div class="phase-label">M1</div></div>
+    <div class="phase-bar-item"><div class="mini-bar-bg"><div class="mini-bar-fill fill2" id="pb2" style="width:0%"></div></div><div class="phase-label">M2</div></div>
+    <div class="phase-bar-item"><div class="mini-bar-bg"><div class="mini-bar-fill fill3" id="pb3" style="width:0%"></div></div><div class="phase-label">M3</div></div>
+    <div class="phase-bar-item"><div class="mini-bar-bg"><div class="mini-bar-fill fill4" id="pb4" style="width:0%"></div></div><div class="phase-label">M4</div></div>
+    <div class="phase-bar-item"><div class="mini-bar-bg"><div class="mini-bar-fill fill5" id="pb5" style="width:0%"></div></div><div class="phase-label">M5</div></div>
+    <div class="phase-bar-item"><div class="mini-bar-bg"><div class="mini-bar-fill fill6" id="pb6" style="width:0%"></div></div><div class="phase-label">M6</div></div>
+  </div>
+</div>
+
+<div class="timeline-overview">
+  <h2>📅 Timeline (по плану Романа)</h2>
+  <div class="tl-grid">
+    <div class="tl-cell tl-c1"><div class="tl-month">Mar – Apr</div><div class="tl-title">Модуль 1</div><div class="tl-tag">Python + Core Agentic Patterns</div></div>
+    <div class="tl-cell tl-c2"><div class="tl-month">Apr – May</div><div class="tl-title">Модуль 2</div><div class="tl-tag">Memory, MCP, Adaptive AI</div></div>
+    <div class="tl-cell tl-c3"><div class="tl-month">May – Jun</div><div class="tl-title">Модуль 3</div><div class="tl-tag">Robustness, HITL, RAG</div></div>
+    <div class="tl-cell tl-c4"><div class="tl-month">Jun – Jul</div><div class="tl-title">Модуль 4</div><div class="tl-tag">Advanced Arch, A2A, Safety</div></div>
+    <div class="tl-cell tl-c5"><div class="tl-month">Jul – Aug</div><div class="tl-title">Deploy + Cloud</div><div class="tl-tag">Docker, APIs, MLOps</div></div>
+    <div class="tl-cell tl-c6"><div class="tl-month">Aug – Sep</div><div class="tl-title">Portfolio + Stage 2</div><div class="tl-tag">Software Architecture Start</div></div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="timeline-header">
+    <h2>📚 6-Month Phases</h2>
+    <span style="font-size:12px;color:var(--muted);">Нажми → Отмечай задачи ✓</span>
+  </div>
+
+  <!-- PHASE 1 -->
+  <div class="phase open b1" data-phase="1">
+    <div class="phase-header" onclick="togglePhase(this)">
+      <div class="phase-dot c1">1</div>
+      <div class="phase-meta">
+        <h3>🐍 Python Foundations + Модуль 1: Core Agentic Patterns</h3>
+        <div class="phase-dates">March 15 – April 15, 2026 · Сейчас активно</div>
+      </div>
+      <span class="phase-status status-active">🔵 Active Now</span>
+      <span class="phase-toggle">▼</span>
+    </div>
+    <div class="phase-body">
+      <div class="roman-module">📋 Roman — Модуль 1: Foundations of Agentic AI Systems (3–4 недели)</div>
+      <div class="smart-goal"><strong>SMART Goal:</strong> К 15 апреля — написать первый рабочий AI-агент с минимум 2 паттернами от Романа (Prompt Chaining + Tool Use), запушить на GitHub с flowchart-схемой.</div>
+      <div class="two-col">
+        <div class="col-block">
+          <h4>✅ Tasks</h4>
+          <ul class="task-list" data-phase="1">
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Настроить Python-окружение (VSCode, pip, venv)</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Python basics: переменные, функции, циклы, классы</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Git + GitHub: commit, push, branches, README</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span><span class="topic-tag">1.1</span> Prompt Chaining — цепочка промптов с OpenAI/Claude API</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span><span class="topic-tag">1.2</span> Routing — классификация запросов, маршрутизация</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span><span class="topic-tag">1.3</span> Parallelization — async Python, fan-out/fan-in паттерны</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span><span class="topic-tag">1.4</span> Reflection — self-critique и итеративное улучшение агента</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span><span class="topic-tag">1.5</span> Tool Use — function calling, подключить внешний API</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span><span class="topic-tag">1.6</span> Planning — декомпозиция задачи на подзадачи</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span><span class="topic-tag">1.7</span> Multi-Agent — 2 агента с разными ролями</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Flowchart: схема агентного пайплайна (Miro / draw.io)</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Разобрать 2–3 примера в Anthropic Cookbook</li>
+          </ul>
+        </div>
+        <div class="col-block">
+          <h4>📚 Resources</h4>
+          <ul class="resource-list">
+            <li><a href="https://github.com/anthropics/anthropic-cookbook" target="_blank"><span class="res-icon">📖</span><div><div class="res-name">Anthropic Cookbook</div><div class="res-tag">⭐ Roman · Паттерны агентов · Free</div></div></a></li>
+            <li><a href="https://python.langchain.com/docs/introduction/" target="_blank"><span class="res-icon">🦜</span><div><div class="res-name">LangChain Docs</div><div class="res-tag">⭐ Roman · Агентный фреймворк</div></div></a></li>
+            <li><a href="https://www.deeplearning.ai/short-courses/" target="_blank"><span class="res-icon">🧠</span><div><div class="res-name">DeepLearning.AI Short Courses</div><div class="res-tag">⭐ Roman · Agents + AI · Free</div></div></a></li>
+            <li><a href="https://pll.harvard.edu/course/cs50s-introduction-artificial-intelligence-python" target="_blank"><span class="res-icon">🎓</span><div><div class="res-name">Harvard CS50 AI (Python)</div><div class="res-tag">Free · Python AI для начинающих</div></div></a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="milestone-block">
+        <div class="milestone-label">🏁 Milestone — конец апреля</div>
+        Первый агент на GitHub: Prompt Chaining + Tool Use + Routing. Понимание всех 7 паттернов Модуля 1. Flowchart агентного пайплайна нарисован.
+      </div>
+      <div class="startup-tip">
+        <div class="tip-label">💡 Startup Angle</div>
+        Tool Use (1.5) — прямое применение: агент вызывает бизнес-API вашего стартапа. Обсудите с командой, какой инструмент должен уметь вызывать агент в первую очередь.
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 2 -->
+  <div class="phase b2" data-phase="2">
+    <div class="phase-header" onclick="togglePhase(this)">
+      <div class="phase-dot c2">2</div>
+      <div class="phase-meta">
+        <h3>🧠 Модуль 2: Adaptive & Contextual Intelligence</h3>
+        <div class="phase-dates">April 15 – May 15, 2026 · Month 2</div>
+      </div>
+      <span class="phase-status status-upcoming">⚪ Upcoming</span>
+      <span class="phase-toggle">▼</span>
+    </div>
+    <div class="phase-body">
+      <div class="roman-module">📋 Roman — Модуль 2: Adaptive and Contextual Intelligence (3–4 недели)</div>
+      <div class="smart-goal"><strong>SMART Goal:</strong> К 15 мая — реализовать агента с долгосрочной памятью между сессиями, используя MCP-шаблоны от Романа. Агент «помнит» пользователя и адаптируется.</div>
+      <div class="two-col">
+        <div class="col-block">
+          <h4>✅ Tasks</h4>
+          <ul class="task-list" data-phase="2">
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span><span class="topic-tag">2.1</span> Memory: short-term (сессия) vs. long-term (между сессиями)</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Реализовать in-session память (контекст в диалоге)</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Реализовать cross-session память (сохранение в БД/файл)</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Сжатие контекста: summary-стратегии для длинных диалогов</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span><span class="topic-tag">2.2</span> Learning & Adaptation — feedback loops, адаптивные промпты</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span><span class="topic-tag">2.3</span> MCP — изучить протокол, написать свой шаблон</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>LangGraph: stateful агент с персистентным состоянием</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span><span class="topic-tag">2.4</span> Goal Setting & Monitoring — динамическое целеполагание</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Начать «AI Engineering» — Chip Huyen (часть 1)</li>
+          </ul>
+        </div>
+        <div class="col-block">
+          <h4>📚 Resources</h4>
+          <ul class="resource-list">
+            <li><a href="https://langchain-ai.github.io/langgraph/" target="_blank"><span class="res-icon">🕸️</span><div><div class="res-name">LangGraph Docs</div><div class="res-tag">⭐ Roman · Stateful agents</div></div></a></li>
+            <li><a href="https://www.anthropic.com/news/model-context-protocol" target="_blank"><span class="res-icon">🔗</span><div><div class="res-name">Model Context Protocol (MCP)</div><div class="res-tag">⭐ Roman · Anthropic · Official</div></div></a></li>
+            <li><a href="https://www.deeplearning.ai/short-courses/ai-agents-in-langgraph/" target="_blank"><span class="res-icon">🤖</span><div><div class="res-name">AI Agents in LangGraph</div><div class="res-tag">DeepLearning.AI · Free</div></div></a></li>
+            <li><a href="https://www.oreilly.com/library/view/ai-engineering/9781098166298/" target="_blank"><span class="res-icon">📕</span><div><div class="res-name">AI Engineering — Chip Huyen</div><div class="res-tag">⭐ Roman's Book · LLM apps</div></div></a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="milestone-block">
+        <div class="milestone-label">🏁 Milestone — конец мая</div>
+        LangGraph агент с персистентной памятью между сессиями. MCP-шаблон написан и задокументирован. Понимание стратегий memory compression.
+      </div>
+      <div class="startup-tip">
+        <div class="tip-label">💡 Startup Angle</div>
+        MCP (2.3) — стандарт Anthropic Claude. Ваш стартап строится на Claude — это прямое практическое применение Модуля 2 прямо сейчас, в реальном продукте.
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 3 -->
+  <div class="phase b3" data-phase="3">
+    <div class="phase-header" onclick="togglePhase(this)">
+      <div class="phase-dot c3">3</div>
+      <div class="phase-meta">
+        <h3>🛡️ Модуль 3: Robustness, Human-in-the-Loop & RAG</h3>
+        <div class="phase-dates">May 15 – June 15, 2026 · Month 3</div>
+      </div>
+      <span class="phase-status status-upcoming">⚪ Upcoming</span>
+      <span class="phase-toggle">▼</span>
+    </div>
+    <div class="phase-body">
+      <div class="roman-module">📋 Roman — Модуль 3: Robustness, Human Collaboration & Knowledge Integration (3–4 недели)</div>
+      <div class="smart-goal"><strong>SMART Goal:</strong> К 15 июня — построить RAG-систему на документах стартапа, добавить HITL-checkpoint с одобрением человека, симулировать 3 сценария отказа с graceful recovery.</div>
+      <div class="two-col">
+        <div class="col-block">
+          <h4>✅ Tasks</h4>
+          <ul class="task-list" data-phase="3">
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span><span class="topic-tag">3.1</span> Exception Handling — retry-стратегии, fallback-цепочки</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Graceful degradation: агент адаптируется, не падает</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Симуляция 3 сценариев отказа (rate limit, timeout, bad output)</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span><span class="topic-tag">3.2</span> Human-in-the-Loop (HITL) — точки одобрения в пайплайне</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Построить HITL-checkpoint: агент запрашивает подтверждение</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span><span class="topic-tag">3.3</span> RAG: векторная БД (Chroma / FAISS), индексирование</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Семантический поиск по документам стартапа</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Live RAG-демо: агент отвечает на вопросы по вашим docs</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Читать «Designing ML Systems» — Chip Huyen (гл. 1–4)</li>
+          </ul>
+        </div>
+        <div class="col-block">
+          <h4>📚 Resources</h4>
+          <ul class="resource-list">
+            <li><a href="https://www.deeplearning.ai/short-courses/building-agentic-rag-with-llamaindex/" target="_blank"><span class="res-icon">🔍</span><div><div class="res-name">Agentic RAG with LlamaIndex</div><div class="res-tag">DeepLearning.AI · Free</div></div></a></li>
+            <li><a href="https://docs.trychroma.com/" target="_blank"><span class="res-icon">🎨</span><div><div class="res-name">Chroma Vector DB</div><div class="res-tag">Free · Open source · RAG</div></div></a></li>
+            <li><a href="https://huggingface.co/learn/cookbook/rag_zephyr_langchain" target="_blank"><span class="res-icon">🤗</span><div><div class="res-name">Hugging Face RAG Cookbook</div><div class="res-tag">Free · RAG-рецепты</div></div></a></li>
+            <li><a href="https://www.oreilly.com/library/view/designing-machine-learning/9781098107956/" target="_blank"><span class="res-icon">📗</span><div><div class="res-name">Designing ML Systems — Chip Huyen</div><div class="res-tag">⭐ Roman's Book</div></div></a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="milestone-block">
+        <div class="milestone-label">🏁 Milestone — конец июня</div>
+        Рабочая RAG-система на документах стартапа. HITL-checkpoint в пайплайне. 3 failure scenario задокументированы + recovery стратегия.
+      </div>
+      <div class="startup-tip">
+        <div class="tip-label">💡 Startup Angle</div>
+        RAG (3.3) — это готовый MVP-продукт: «AI-ассистент по документации стартапа». Индексируй product brief, FAQ, roadmap. Можно показать инвесторам через месяц.
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 4 -->
+  <div class="phase b4" data-phase="4">
+    <div class="phase-header" onclick="togglePhase(this)">
+      <div class="phase-dot c4">4</div>
+      <div class="phase-meta">
+        <h3>⚡ Модуль 4: Advanced Architectures & Optimization</h3>
+        <div class="phase-dates">June 15 – July 15, 2026 · Month 4</div>
+      </div>
+      <span class="phase-status status-upcoming">⚪ Upcoming</span>
+      <span class="phase-toggle">▼</span>
+    </div>
+    <div class="phase-body">
+      <div class="roman-module">📋 Roman — Модуль 4: Advanced Agentic Architectures & Optimization (4–5 недель)</div>
+      <div class="smart-goal"><strong>SMART Goal:</strong> К 15 июля — multi-agent система (≥2 агентов с A2A), Chain-of-Thought + Guardrails настроены, eval-dashboard с метриками качества работает.</div>
+      <div class="two-col">
+        <div class="col-block">
+          <h4>✅ Tasks</h4>
+          <ul class="task-list" data-phase="4">
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span><span class="topic-tag">4.1</span> A2A Communication — message passing, shared state, blackboard</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>CrewAI: crew из 2+ агентов с разными ролями и задачами</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span><span class="topic-tag">4.2</span> Resource-Aware Optimization — бюджет токенов, стоимость API</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Снизить cost агента на 30% без потери качества</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span><span class="topic-tag">4.3</span> Reasoning: Chain-of-Thought, ReAct, Tree-of-Thought</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span><span class="topic-tag">4.4</span> Guardrails & Safety — фильтрация, constitutional constraints</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span><span class="topic-tag">4.5</span> Evaluation & Monitoring — метрики, A/B тесты для AI</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span><span class="topic-tag">4.6</span> Prioritization — управление очередью задач агента</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span><span class="topic-tag">4.7</span> Exploration & Discovery — автономное расширение возможностей</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Stanford CS329S (YouTube) — первые 4 лекции</li>
+          </ul>
+        </div>
+        <div class="col-block">
+          <h4>📚 Resources</h4>
+          <ul class="resource-list">
+            <li><a href="https://www.crewai.com/" target="_blank"><span class="res-icon">👥</span><div><div class="res-name">CrewAI</div><div class="res-tag">⭐ Roman · Multi-agent systems</div></div></a></li>
+            <li><a href="https://docs.anthropic.com/en/docs/build-with-claude/agents" target="_blank"><span class="res-icon">🤖</span><div><div class="res-name">Claude Agent SDK</div><div class="res-tag">⭐ Roman · Anthropic · Official</div></div></a></li>
+            <li><a href="https://www.youtube.com/watch?v=OEt4OZork0o" target="_blank"><span class="res-icon">🎓</span><div><div class="res-name">Stanford CS329S — ML Systems</div><div class="res-tag">⭐ Roman · YouTube · Free</div></div></a></li>
+            <li><a href="https://www.youtube.com/@ByteByteGo" target="_blank"><span class="res-icon">📺</span><div><div class="res-name">ByteByteGo</div><div class="res-tag">⭐ Roman · System Design · YouTube</div></div></a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="milestone-block">
+        <div class="milestone-label">🏁 Milestone — конец июля</div>
+        Multi-agent система с CrewAI (≥2 агентов с A2A). Guardrails настроены. Eval-dashboard с метриками. Все 7 тем Модуля 4 Романа разобраны.
+      </div>
+      <div class="startup-tip">
+        <div class="tip-label">💡 Startup Angle</div>
+        A2A (4.1): агент-менеджер ставит задачи агенту-разработчику и агенту-тестировщику. Это архитектура AI-автоматизации вашего стартапа в реальности.
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 5 -->
+  <div class="phase b5" data-phase="5">
+    <div class="phase-header" onclick="togglePhase(this)">
+      <div class="phase-dot c5">5</div>
+      <div class="phase-meta">
+        <h3>🐳 Deploy: Docker, FastAPI, Cloud (MLOps-слой)</h3>
+        <div class="phase-dates">July 15 – August 15, 2026 · Month 5</div>
+      </div>
+      <span class="phase-status status-upcoming">⚪ Upcoming</span>
+      <span class="phase-toggle">▼</span>
+    </div>
+    <div class="phase-body">
+      <div class="roman-module">📋 Stage 2 preview (Роман: август+) + практический DevOps/MLOps для агентных систем</div>
+      <div class="smart-goal"><strong>SMART Goal:</strong> К 15 августа — агентная система из Модулей 1–4 задеплоена в облако (GCP/AWS free tier), обёрнута в FastAPI, запущена в Docker с мониторингом.</div>
+      <div class="two-col">
+        <div class="col-block">
+          <h4>✅ Tasks</h4>
+          <ul class="task-list" data-phase="5">
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Docker: контейнеризация агентного приложения</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>FastAPI: REST endpoint (request → agent → response)</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>GitHub Actions CI/CD: автодеплой при push в main</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>MLflow: логирование latency, cost, quality агента</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Cloud deploy: GCP Cloud Run или AWS Lambda</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Мониторинг: health-check, базовые алерты</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>«System Design Interview» — Alex Xu (гл. 1–5)</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>«Building LLM Powered Applications» — Valentina Alto (начало)</li>
+          </ul>
+        </div>
+        <div class="col-block">
+          <h4>📚 Resources</h4>
+          <ul class="resource-list">
+            <li><a href="https://fastapi.tiangolo.com/tutorial/" target="_blank"><span class="res-icon">⚡</span><div><div class="res-name">FastAPI Tutorial</div><div class="res-tag">Free · Python API framework</div></div></a></li>
+            <li><a href="https://docs.docker.com/get-started/" target="_blank"><span class="res-icon">🐳</span><div><div class="res-name">Docker Get Started</div><div class="res-tag">Free · Official</div></div></a></li>
+            <li><a href="https://cloud.google.com/run/docs/quickstarts" target="_blank"><span class="res-icon">☁️</span><div><div class="res-name">Google Cloud Run</div><div class="res-tag">Free tier · Serverless</div></div></a></li>
+            <li><a href="https://mlflow.org/docs/latest/tutorials-and-examples/" target="_blank"><span class="res-icon">📈</span><div><div class="res-name">MLflow</div><div class="res-tag">Free · AI metrics tracking</div></div></a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="milestone-block">
+        <div class="milestone-label">🏁 Milestone — конец августа</div>
+        Агентная система живёт в облаке по HTTPS. FastAPI + Docker + CI/CD. Метрики (latency, cost, quality) в MLflow. IT-management опыт применён к cloud infrastructure стартапа.
+      </div>
+      <div class="startup-tip">
+        <div class="tip-label">💡 Startup Angle</div>
+        Твой IT-management бэкграунд бесценен здесь: возьми на себя cloud infrastructure стартапа. Это прямой вклад в продукт + реальный DevOps/MLOps опыт одновременно.
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 6 -->
+  <div class="phase b6" data-phase="6">
+    <div class="phase-header" onclick="togglePhase(this)">
+      <div class="phase-dot c6">6</div>
+      <div class="phase-meta">
+        <h3>🚀 Portfolio + Software Architecture (Stage 2 Start)</h3>
+        <div class="phase-dates">August 15 – September 15, 2026 · Month 6</div>
+      </div>
+      <span class="phase-status status-upcoming">⚪ Upcoming</span>
+      <span class="phase-toggle">▼</span>
+    </div>
+    <div class="phase-body">
+      <div class="roman-module">📋 Roman — Stage 2 (август 2026+): Software Architecture · Stage 3 (осень): конкретный стек</div>
+      <div class="smart-goal"><strong>SMART Goal:</strong> К 15 сентября — 3 GitHub-проекта с документацией, 1 live AI-фича в стартапе, LinkedIn обновлён. Stage 2 по Роману стартует: System Design основы.</div>
+      <div class="two-col">
+        <div class="col-block">
+          <h4>✅ Tasks</h4>
+          <ul class="task-list" data-phase="6">
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Оформить 3 portfolio-проекта: README, демо, arch-схема</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Написать технический пост на Medium/Substack</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Задеплоить AI-фичу для стартапа совместно с frontend-разработчиком</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Обновить LinkedIn: AI Engineer, ссылки на проекты</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>System Design Interview (Alex Xu) — гл. 6–10</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>ByteByteGo YouTube: 10 видео по system design</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Поставить цели на осень: Roman's Stage 3 (конкретный стек)</li>
+            <li onclick="toggleTask(this)"><span class="task-checkbox"></span>Mock-интервью или peer code review</li>
+          </ul>
+        </div>
+        <div class="col-block">
+          <h4>📚 Resources</h4>
+          <ul class="resource-list">
+            <li><a href="https://www.youtube.com/@ByteByteGo" target="_blank"><span class="res-icon">📺</span><div><div class="res-name">ByteByteGo</div><div class="res-tag">⭐ Roman · System Design · YouTube</div></div></a></li>
+            <li><a href="https://www.amazon.com/System-Design-Interview-Insiders-Guide/dp/B08CMF2CQF" target="_blank"><span class="res-icon">📘</span><div><div class="res-name">System Design Interview — Alex Xu</div><div class="res-tag">⭐ Roman's Book · Stage 2</div></div></a></li>
+            <li><a href="https://huggingface.co/learn" target="_blank"><span class="res-icon">🤗</span><div><div class="res-name">Hugging Face Courses</div><div class="res-tag">Free · LLMs, Transformers</div></div></a></li>
+            <li><a href="https://platform.openai.com/docs" target="_blank"><span class="res-icon">🔮</span><div><div class="res-name">OpenAI API Docs</div><div class="res-tag">Free tier · GPT + Embeddings</div></div></a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="milestone-block">
+        <div class="milestone-label">🏁 Final Milestone — September 15 ✅ GOAL ACHIEVED</div>
+        3 GitHub-проекта (Agentic AI, RAG, Multi-Agent). 1 live AI-фича в стартапе. LinkedIn обновлён. System Design основы заложены. Roman's Stage 2 начат. Готов к Stage 3 (осень 2026).
+      </div>
+      <div class="startup-tip">
+        <div class="tip-label">💡 Startup Angle</div>
+        К сентябрю ты — AI-инженер стартапа с полным пониманием agentic систем, RAG, multi-agent архитектур и деплоя. Именно это заложил Роман как итог первых 6 месяцев.
+      </div>
+    </div>
+  </div>
+
+  <!-- ROMAN'S BOOKS -->
+  <div class="section" style="margin-left:0;margin-right:0;">
+    <h2>📚 Книги от Романа (Reading List)</h2>
+    <div class="books-grid">
+      <div class="book-card">
+        <div class="book-icon">📗</div>
+        <div class="book-title">Designing Machine Learning Systems</div>
+        <div class="book-author">Chip Huyen · O'Reilly</div>
+        <div class="book-phase">→ Phase 3–4 · Production ML</div>
+      </div>
+      <div class="book-card">
+        <div class="book-icon">📕</div>
+        <div class="book-title">AI Engineering</div>
+        <div class="book-author">Chip Huyen · O'Reilly 2025</div>
+        <div class="book-phase">→ Phase 2–3 · LLM applications</div>
+      </div>
+      <div class="book-card">
+        <div class="book-icon">📙</div>
+        <div class="book-title">Building LLM Powered Applications</div>
+        <div class="book-author">Valentina Alto · Packt</div>
+        <div class="book-phase">→ Phase 5 · Deployment</div>
+      </div>
+      <div class="book-card">
+        <div class="book-icon">📘</div>
+        <div class="book-title">System Design Interview</div>
+        <div class="book-author">Alex Xu · Vol 1 + 2</div>
+        <div class="book-phase">→ Phase 6 + Stage 2</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ALL RESOURCES -->
+  <div class="section" style="margin-left:0;margin-right:0;margin-top:16px;">
+    <h2>🔗 Master Resource Library</h2>
+    <div class="res-grid">
+      <a class="res-card" href="https://github.com/anthropics/anthropic-cookbook" target="_blank">
+        <div class="rc-top"><span class="rc-icon">📖</span><div class="rc-name">Anthropic Cookbook</div></div>
+        <div class="rc-desc">Официальные паттерны Anthropic: agentic workflows, tool use, multi-agent.</div>
+        <div class="rc-tags"><span class="rc-tag">⭐ Roman</span><span class="rc-tag">Free</span><span class="rc-tag">Official</span></div>
+      </a>
+      <a class="res-card" href="https://www.crewai.com/" target="_blank">
+        <div class="rc-top"><span class="rc-icon">👥</span><div class="rc-name">CrewAI</div></div>
+        <div class="rc-desc">Фреймворк для multi-agent систем. Роли, задачи, инструменты для каждого агента.</div>
+        <div class="rc-tags"><span class="rc-tag">⭐ Roman</span><span class="rc-tag">Free</span><span class="rc-tag">Multi-Agent</span></div>
+      </a>
+      <a class="res-card" href="https://python.langchain.com/" target="_blank">
+        <div class="rc-top"><span class="rc-icon">🦜</span><div class="rc-name">LangChain / LangGraph</div></div>
+        <div class="rc-desc">Основной фреймворк для агентов. LangGraph — для stateful и cyclical агентов.</div>
+        <div class="rc-tags"><span class="rc-tag">⭐ Roman</span><span class="rc-tag">Free</span><span class="rc-tag">Agents</span></div>
+      </a>
+      <a class="res-card" href="https://docs.anthropic.com/en/docs/build-with-claude/agents" target="_blank">
+        <div class="rc-top"><span class="rc-icon">🤖</span><div class="rc-name">Claude Agent SDK</div></div>
+        <div class="rc-desc">SDK от Anthropic для агентов на Claude. Прямо как в этом инструменте.</div>
+        <div class="rc-tags"><span class="rc-tag">⭐ Roman</span><span class="rc-tag">Official</span><span class="rc-tag">Anthropic</span></div>
+      </a>
+      <a class="res-card" href="https://www.deeplearning.ai/short-courses/" target="_blank">
+        <div class="rc-top"><span class="rc-icon">🧠</span><div class="rc-name">DeepLearning.AI</div></div>
+        <div class="rc-desc">Andrew Ng. Короткие курсы по агентам, RAG, LangChain, Agentic AI — бесплатно.</div>
+        <div class="rc-tags"><span class="rc-tag">⭐ Roman</span><span class="rc-tag">Free</span><span class="rc-tag">Andrew Ng</span></div>
+      </a>
+      <a class="res-card" href="https://www.youtube.com/@ByteByteGo" target="_blank">
+        <div class="rc-top"><span class="rc-icon">📺</span><div class="rc-name">ByteByteGo</div></div>
+        <div class="rc-desc">System Design в коротких видео. Для Stage 2 по Роману.</div>
+        <div class="rc-tags"><span class="rc-tag">⭐ Roman</span><span class="rc-tag">Free</span><span class="rc-tag">YouTube</span></div>
+      </a>
+      <a class="res-card" href="https://pll.harvard.edu/course/cs50s-introduction-artificial-intelligence-python" target="_blank">
+        <div class="rc-top"><span class="rc-icon">🎓</span><div class="rc-name">Harvard CS50 AI</div></div>
+        <div class="rc-desc">Лучший бесплатный AI-курс для начинающих. Python-based, structured.</div>
+        <div class="rc-tags"><span class="rc-tag">Free</span><span class="rc-tag">Harvard</span><span class="rc-tag">Beginner</span></div>
+      </a>
+      <a class="res-card" href="https://roadmap.sh/mlops" target="_blank">
+        <div class="rc-top"><span class="rc-icon">🗺️</span><div class="rc-name">roadmap.sh/mlops</div></div>
+        <div class="rc-desc">Визуальная карта MLOps — для Phase 5 (deploy слой).</div>
+        <div class="rc-tags"><span class="rc-tag">Free</span><span class="rc-tag">Visual</span><span class="rc-tag">MLOps</span></div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  Alexey's AI System Design SMART Plan · Curator: Roman Yustin (EPAM) · Updated March 2026
+</div>
+
+<script>
+  function togglePhase(header) {
+    header.closest('.phase').classList.toggle('open');
+  }
+  function toggleTask(li) {
+    li.classList.toggle('done');
+    updateProgress();
+    saveTasks();
+  }
+  function updateProgress() {
+    const all = document.querySelectorAll('.task-list li');
+    const done = document.querySelectorAll('.task-list li.done');
+    document.getElementById('totalCount').textContent = all.length;
+    document.getElementById('doneCount').textContent = done.length;
+    document.getElementById('mainBar').style.width = all.length ? (done.length / all.length * 100) + '%' : '0%';
+    for (let i = 1; i <= 6; i++) {
+      const ph = document.querySelector('[data-phase="' + i + '"] .task-list');
+      if (!ph) continue;
+      const pA = ph.querySelectorAll('li'), pD = ph.querySelectorAll('li.done');
+      const b = document.getElementById('pb' + i);
+      if (b) b.style.width = pA.length ? (pD.length / pA.length * 100) + '%' : '0%';
+    }
+  }
+  function saveTasks() {
+    const t = [];
+    document.querySelectorAll('.task-list li').forEach(li => t.push(li.classList.contains('done')));
+    try { localStorage.setItem('alexey_plan_v3', JSON.stringify(t)); } catch(e) {}
+  }
+  function loadTasks() {
+    try {
+      const s = JSON.parse(localStorage.getItem('alexey_plan_v3') || '[]');
+      document.querySelectorAll('.task-list li').forEach((li, i) => { if (s[i]) li.classList.add('done'); });
+    } catch(e) {}
+    updateProgress();
+  }
+  window.addEventListener('load', loadTasks);
+</script>
+</body>
+</html>

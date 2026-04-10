@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+:root {
+  --background: #faf9f5;
+  --foreground: #1c1917;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), Arial, sans-serif;
+}
+
+.progress-fill {
+  width: var(--progress-width, 0%);
+}
+
+.bounce-delay-1 { animation-delay: 0.15s; }
+.bounce-delay-2 { animation-delay: 0.30s; }
