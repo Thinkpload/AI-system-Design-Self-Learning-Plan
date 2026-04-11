@@ -30,17 +30,19 @@ export default function PhaseCard({ phase, index }: PhaseCardProps) {
   const colorClass = phaseColors[index % phaseColors.length];
 
   return (
-    <Link href={`/phase/${phase.id}`}>
-      <div className={`rounded-xl border-2 p-5 cursor-pointer hover:shadow-md transition-all duration-200 ${colorClass}`}>
-        <div className="flex items-start justify-between mb-1">
+    <Link href={`/phase/${phase.id}`} className="block h-full">
+      <div className={`flex flex-col h-full rounded-xl border-2 p-5 cursor-pointer hover:shadow-md transition-all duration-200 ${colorClass}`}>
+        <div className="flex items-start justify-between mb-1 shrink-0">
           <span className="text-xs font-semibold text-stone-400 uppercase tracking-widest">
             {ui('phase_label', lang)} {phase.id}
           </span>
           <span className="text-xs text-stone-400">{phase.dateRange}</span>
         </div>
-        <h3 className="font-bold text-stone-800 text-lg leading-tight mb-1">{t(phase.title)}</h3>
-        <p className="text-xs text-stone-500 mb-4 line-clamp-2">{t(phase.subtitle)}</p>
-        <ProgressBar completed={done} total={total} showLabel lang={lang} />
+        <h3 className="font-bold text-stone-800 text-lg leading-tight mb-1 shrink-0">{t(phase.title)}</h3>
+        <p className="text-xs text-stone-500 mb-4 min-h-[2.5em]">{t(phase.subtitle)}</p>
+        <div className="mt-auto shrink-0">
+          <ProgressBar completed={done} total={total} showLabel lang={lang} />
+        </div>
       </div>
     </Link>
   );
